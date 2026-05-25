@@ -1,91 +1,49 @@
-import type { Topic } from '../types';
-import { ApiKeyInput } from './ApiKeyInput';
+import { useTheme } from '../context/ThemeContext';
 
 interface SidebarProps {
-  topicMap: Record<Topic, { label: string; color: string }>;
-  activeTopic: Topic | 'Alla';
-  onSelectTopic: (topic: Topic | 'Alla') => void;
   activeNav: 'Home' | 'Flöde' | 'Inställningar' | 'Profil';
   onSelectNav: (nav: 'Home' | 'Flöde' | 'Inställningar' | 'Profil') => void;
-  totalDecisions: number;
 }
 
-export function Sidebar({ topicMap, activeTopic, onSelectTopic, activeNav, onSelectNav, totalDecisions }: SidebarProps) {
+const NAV_ITEMS = [
+  { id: 'Home', label: 'Hem', icon: '🏠' },
+  { id: 'Flöde', label: 'Flöde', icon: '📰' },
+  { id: 'Inställningar', label: 'Inställningar', icon: '⚙️' },
+  { id: 'Profil', label: 'Profil', icon: '👤' },
+] as const;
+
+export function Sidebar({ activeNav, onSelectNav }: SidebarProps) {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <aside className="sidebar-shell">
-      <div className="sidebar-card sidebar-menu">
-        <nav className="nav-list">
-          <button className={activeNav === 'Home' ? 'nav-item active' : 'nav-item'} onClick={() => onSelectNav('Home')}>
-            Home
-          </button>
-          <button className={activeNav === 'Flöde' ? 'nav-item active' : 'nav-item'} onClick={() => onSelectNav('Flöde')}>
-            Flöde
-          </button>
-          <button className={activeNav === 'Inställningar' ? 'nav-item active' : 'nav-item'} onClick={() => onSelectNav('Inställningar')}>
-            Inställningar
-          </button>
-          <button className={activeNav === 'Profil' ? 'nav-item active' : 'nav-item'} onClick={() => onSelectNav('Profil')}>
-            Profil
-          </button>
-        </nav>
+      <div className="sidebar-logo">
+        <div className="logo-icon">RK</div>
+        <h2>Riksdagkollen</h2>
       </div>
 
-      <div className="sidebar-card sidebar-intro">
-        <p className="eyebrow">Navigering</p>
-        <h2>Utforska politiska beslut</h2>
-        <p>
-          Filtrera, jämför och förstå hur riksdagen och regeringen påverkar vardagen.
-          Här finns också snabbt stöd för att koppla in AI-sammanfattningar senare.
-        </p>
-      </div>
-
-      <div className="sidebar-card sidebar-section">
-        <div className="sidebar-heading">
-          <h3>Kategorier</h3>
-          <span>{totalDecisions} ärenden</span>
-        </div>
-        <div className="topic-list">
+      <nav className="sidebar-nav">
+        {NAV_ITEMS.map((item) => (
           <button
-            className={activeTopic === 'Alla' ? 'topic-button active' : 'topic-button'}
-            onClick={() => onSelectTopic('Alla')}
+            key={item.id}
+            className={`nav-button ${activeNav === item.id ? 'active' : ''}`}
+            onClick={() => onSelectNav(item.id as 'Home' | 'Flöde' | 'Inställningar' | 'Profil')}
+            title={item.label}
           >
-            Alla
+            <span className="nav-icon">{item.icon}</span>
+            <span className="nav-label">{item.label}</span>
           </button>
-          {Object.keys(topicMap).map((topic) => (
-            <button
-              key={topic}
-              className={activeTopic === topic ? 'topic-button active' : 'topic-button'}
-              onClick={() => onSelectTopic(topic as Topic)}
-            >
-              {topicMap[topic as Topic].label}
-            </button>
-          ))}
-        </div>
-      </div>
+        ))}
+      </nav>
 
-      <ApiKeyInput />
+      <button className="theme-toggle" onClick={toggleTheme} title={`Byt till ${theme === 'light' ? 'mörkt' : 'ljust'} tema`}>
+        <span className="theme-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
+        <span className="theme-label">{theme === 'light' ? 'Mörkt' : 'Ljust'}</span>
+      </button>
 
-      <div className="sidebar-card sidebar-section">
-        <h3>Datakällor</h3>
-        <ul className="source-list">
-          <li>Riksdagens öppna API för dokument och voteringar</li>
-          <li>Regeringen via g0v / öppna JSON-endpoints</li>
-          <li>Officiella dokumenttyper, departement och utskott</li>
-        </ul>
-      </div>
-
-      <div className="sidebar-card sidebar-section">
-        <h3>Vad händer här?</h3>
-        <p>
-          Se neutral AI-sammanfattning av beslut, partiernas röster och förklaringar av
-          vad det betyder för dig. Alltid med länk till originalkällan.
-        </p>
-      </div>
-
-      <div className="sidebar-card profile-card">
-        <p className="eyebrow">Profil</p>
-        <strong>Ung politik</strong>
-        <p className="profile-text">Användarinställningar och kontoöversikt kommer här.</p>
+      <div className="sidebar-footer">
+        <p className="version-text">v1.0.0</p>
+        <p className="footer-text">Riksdagkollen</p>
       </div>
     </aside>
   );

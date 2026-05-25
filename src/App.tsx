@@ -1,9 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { DecisionCard } from './components/DecisionCard';
 import { DecisionDetail } from './components/DecisionDetail';
 import { Sidebar } from './components/Sidebar';
+import { Home } from './pages/Home';
+import { Feed } from './pages/Feed';
+import { Settings } from './pages/Settings';
+import { Profile } from './pages/Profile';
 import { topicMap } from './data/topics';
-import type { Decision, Topic } from './types';
+import type { Decision } from './types';
 
 const sampleDecisions: Decision[] = [
   {
@@ -51,75 +55,45 @@ const sampleDecisions: Decision[] = [
 ];
 
 function App() {
-  const [selectedId, setSelectedId] = useState(sampleDecisions[0].id);
-  const [activeTopic, setActiveTopic] = useState<'Alla' | Topic>('Alla');
   const [activeNav, setActiveNav] = useState<'Home' | 'Flöde' | 'Inställningar' | 'Profil'>('Home');
+  const [apiKey, setApiKey] = useState<string | null>(import.meta.env.VITE_OPENAI_API_KEY || null);
+  const [selectedDecisionDetail, setSelectedDecisionDetail] = useState<Decision | null>(null);
 
-  const filteredDecisions = useMemo(() => {
-    if (activeTopic === 'Alla') {
-      return sampleDecisions;
+  const renderPage = () => {
+    switch (activeNav) {
+      case 'Home':
+        return <Home decisions={sampleDecisions} onViewDecision={setSelectedDecisionDetail} />;
+      case 'Flöde':
+        return <Feed decisions={sampleDecisions} onViewDecision={setSelectedDecisionDetail} />;
+      case 'Inställningar':
+        return <Settings apiKey={apiKey} onApiKeyChange={setApiKey} />;
+      case 'Profil':
+        return <Profile decisions={sampleDecisions} />;
+      default:
+        return <Home decisions={sampleDecisions} onViewDecision={setSelectedDecisionDetail} />;
     }
-    return sampleDecisions.filter((decision) => decision.topics.includes(activeTopic));
-  }, [activeTopic]);
-
-  const selectedDecision = useMemo(
-    () => filteredDecisions.find((decision) => decision.id === selectedId) ?? filteredDecisions[0] ?? sampleDecisions[0],
-    [filteredDecisions, selectedId],
-  );
+  };
 
   return (
     <div className="app-shell">
       <header className="topbar">
-        <div>
-          <p className="eyebrow">Politik</p>
-          <h1>Beslut för dig</h1>
-          <p className="hero-text">
-            Hitta korta, neutrala sammanfattningar av riksdagens och regeringens beslut.
-          </p>
-        </div>
       </header>
 
-      <main className="layout-grid">
-        <Sidebar
-          topicMap={topicMap}
-          activeTopic={activeTopic}
-          onSelectTopic={setActiveTopic}
-          activeNav={activeNav}
-          onSelectNav={setActiveNav}
-          totalDecisions={filteredDecisions.length}
-        />
+      <main className="main-layout">
+        <Sidebar activeNav={activeNav} onSelectNav={setActiveNav} />
 
-        <section className="card-list">
-          <div className="section-header">
-            <h2>Dagens beslut</h2>
-            <p>Översikt av aktuella ärenden med ämnesmarkörer och partisympati.</p>
-          </div>
-          <div className="cards">
-            {filteredDecisions.map((decision) => (
-              <DecisionCard
-                key={decision.id}
-                decision={decision}
-                topicMap={topicMap}
-                selected={decision.id === selectedId}
-                onSelect={() => setSelectedId(decision.id)}
-              />
-            ))}
-          </div>
-          {filteredDecisions.length === 0 ? (
-            <p className="empty-state">Inga beslut matchar det valda ämnet ännu.</p>
-          ) : null}
-        </section>
-
-        <section className="detail-panel">
-          {filteredDecisions.length > 0 ? (
-            <DecisionDetail decision={selectedDecision} topicMap={topicMap} />
-          ) : (
-            <div className="detail-empty">
-              <h3>Inga beslut att visa</h3>
-              <p>Välj ett annat ämne i sidofältet för att se relevanta beslut och sammanfattningar.</p>
+        <div className="page-wrapper">
+          {selectedDecisionDetail ? (
+            <div className="detail-view">
+              <button className="back-button" onClick={() => setSelectedDecisionDetail(null)}>
+                ← Tillbaka
+              </button>
+              <DecisionDetail decision={selectedDecisionDetail} topicMap={topicMap} />
             </div>
+          ) : (
+            renderPage()
           )}
-        </section>
+        </div>
       </main>
     </div>
   );
