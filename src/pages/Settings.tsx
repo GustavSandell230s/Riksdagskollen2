@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ApiKeyInput } from '../components/ApiKeyInput';
+import { LockIcon, CheckIcon } from '../components/Icons';
 import '../styles/pages.css';
 
 interface SettingsProps {
@@ -30,14 +31,14 @@ export function Settings({ apiKey, onApiKeyChange }: SettingsProps) {
             <ApiKeyInput onSave={onApiKeyChange} />
             {apiKey && (
               <div className="api-status success">
-                <span className="status-icon">✓</span>
+                <span className="status-icon"><CheckIcon /></span>
                 <span>API-nyckel är konfigurerad</span>
               </div>
             )}
           </div>
 
           <div className="info-box">
-            <h4>🔒 Sekuritet</h4>
+            <h4><LockIcon className="section-icon" /> Sekuritet</h4>
             <p>
               Din API-nyckel lagras lokalt i din webbläsare och skickas aldrig till externa servrar. Du kan när som helst
               radera eller uppdatera den.

@@ -1,16 +1,25 @@
 import { useTheme } from '../context/ThemeContext';
+import { HomeIcon, FeedIcon, SettingsIcon, UserIcon, AdminIcon, MoonIcon, SunIcon } from './Icons';
+import type { ReactNode } from 'react';
 
 interface SidebarProps {
-  activeNav: 'Home' | 'Flöde' | 'Inställningar' | 'Profil';
-  onSelectNav: (nav: 'Home' | 'Flöde' | 'Inställningar' | 'Profil') => void;
+  activeNav: 'Home' | 'Flöde' | 'Inställningar' | 'Profil' | 'Admin';
+  onSelectNav: (nav: 'Home' | 'Flöde' | 'Inställningar' | 'Profil' | 'Admin') => void;
 }
 
-const NAV_ITEMS = [
-  { id: 'Home', label: 'Hem', icon: '🏠' },
-  { id: 'Flöde', label: 'Flöde', icon: '📰' },
-  { id: 'Inställningar', label: 'Inställningar', icon: '⚙️' },
-  { id: 'Profil', label: 'Profil', icon: '👤' },
-] as const;
+interface NavItem {
+  id: 'Home' | 'Flöde' | 'Inställningar' | 'Profil' | 'Admin';
+  label: string;
+  icon: ReactNode;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { id: 'Home', label: 'Hem', icon: <HomeIcon /> },
+  { id: 'Flöde', label: 'Flöde', icon: <FeedIcon /> },
+  { id: 'Inställningar', label: 'Inställningar', icon: <SettingsIcon /> },
+  { id: 'Profil', label: 'Profil', icon: <UserIcon /> },
+  { id: 'Admin', label: 'Admin', icon: <AdminIcon /> },
+];
 
 export function Sidebar({ activeNav, onSelectNav }: SidebarProps) {
   const { theme, toggleTheme } = useTheme();
@@ -27,7 +36,7 @@ export function Sidebar({ activeNav, onSelectNav }: SidebarProps) {
           <button
             key={item.id}
             className={`nav-button ${activeNav === item.id ? 'active' : ''}`}
-            onClick={() => onSelectNav(item.id as 'Home' | 'Flöde' | 'Inställningar' | 'Profil')}
+            onClick={() => onSelectNav(item.id as 'Home' | 'Flöde' | 'Inställningar' | 'Profil' | 'Admin')}
             title={item.label}
           >
             <span className="nav-icon">{item.icon}</span>
@@ -37,7 +46,7 @@ export function Sidebar({ activeNav, onSelectNav }: SidebarProps) {
       </nav>
 
       <button className="theme-toggle" onClick={toggleTheme} title={`Byt till ${theme === 'light' ? 'mörkt' : 'ljust'} tema`}>
-        <span className="theme-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
+        <span className="theme-icon">{theme === 'light' ? <MoonIcon /> : <SunIcon />}</span>
         <span className="theme-label">{theme === 'light' ? 'Mörkt' : 'Ljust'}</span>
       </button>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DecisionCard } from './components/DecisionCard';
 import { DecisionDetail } from './components/DecisionDetail';
 import { Sidebar } from './components/Sidebar';
@@ -6,9 +6,12 @@ import { Home } from './pages/Home';
 import { Feed } from './pages/Feed';
 import { Settings } from './pages/Settings';
 import { Profile } from './pages/Profile';
+import { Admin } from './pages/Admin';
 import { topicMap } from './data/topics';
+import { getAllDecisions } from './services/supabase';
 import type { Decision } from './types';
 
+// Fallback sample data in case Supabase is not available
 const sampleDecisions: Decision[] = [
   {
     id: '2025/26:129',
@@ -55,22 +58,58 @@ const sampleDecisions: Decision[] = [
 ];
 
 function App() {
-  const [activeNav, setActiveNav] = useState<'Home' | 'Flöde' | 'Inställningar' | 'Profil'>('Home');
+  const [activeNav, setActiveNav] = useState<'Home' | 'Flöde' | 'Inställningar' | 'Profil' | 'Admin'>('Home');
   const [apiKey, setApiKey] = useState<string | null>(import.meta.env.VITE_OPENAI_API_KEY || null);
   const [selectedDecisionDetail, setSelectedDecisionDetail] = useState<Decision | null>(null);
+  const [decisions, setDecisions] = useState<Decision[]>(sampleDecisions);
+  const [isLoadingDecisions, setIsLoadingDecisions] = useState(true);
+  const [supabaseStatus, setSupabaseStatus] = useState<'connecting' | 'connected' | 'failed' | 'disabled'>(
+    import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_KEY ? 'connecting' : 'disabled',
+  );
+  const [supabaseError, setSupabaseError] = useState<string | null>(null);
+
+  const refreshDecisions = async () => {
+    setIsLoadingDecisions(true);
+
+    try {
+      const supabaseDecisions = await getAllDecisions();
+      if (supabaseDecisions.length > 0) {
+        setDecisions(supabaseDecisions);
+        setSelectedDecisionDetail(supabaseDecisions[0]);
+        console.log(`Loaded ${supabaseDecisions.length} decisions from Supabase`);
+      } else {
+        console.log('No decisions in Supabase, using sample data');
+      }
+      setSupabaseStatus('connected');
+    } catch (error) {
+      setSupabaseStatus('failed');
+      setSupabaseError(String(error));
+      console.error('Error loading decisions from Supabase:', error);
+      console.log('Falling back to sample data');
+    } finally {
+      setIsLoadingDecisions(false);
+    }
+  };
+
+  // Load decisions from Supabase on component mount
+  useEffect(() => {
+    refreshDecisions();
+  }, []);
 
   const renderPage = () => {
     switch (activeNav) {
       case 'Home':
-        return <Home decisions={sampleDecisions} onViewDecision={setSelectedDecisionDetail} />;
+        return <Home decisions={decisions} onViewDecision={setSelectedDecisionDetail} />;
       case 'Flöde':
-        return <Feed decisions={sampleDecisions} onViewDecision={setSelectedDecisionDetail} />;
+        return <Feed decisions={decisions} onViewDecision={setSelectedDecisionDetail} />;
       case 'Inställningar':
         return <Settings apiKey={apiKey} onApiKeyChange={setApiKey} />;
       case 'Profil':
-        return <Profile decisions={sampleDecisions} />;
+        return <Profile decisions={decisions} />;
+      case 'Admin':
+        return <Admin onRefreshDecisions={refreshDecisions} />;
       default:
-        return <Home decisions={sampleDecisions} onViewDecision={setSelectedDecisionDetail} />;
+        return <Home decisions={decisions} onViewDecision={setSelectedDecisionDetail} />;
     }
   };
 
