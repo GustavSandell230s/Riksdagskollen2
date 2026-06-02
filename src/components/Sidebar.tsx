@@ -1,5 +1,4 @@
-import { useTheme } from '../context/ThemeContext';
-import { HomeIcon, FeedIcon, SettingsIcon, UserIcon, AdminIcon, MoonIcon, SunIcon } from './Icons';
+import { HomeIcon, FeedIcon, SettingsIcon, UserIcon, AdminIcon } from './Icons';
 import type { ReactNode } from 'react';
 
 interface SidebarProps {
@@ -22,12 +21,9 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export function Sidebar({ activeNav, onSelectNav }: SidebarProps) {
-  const { theme, toggleTheme } = useTheme();
-
   return (
     <aside className="sidebar-shell">
       <div className="sidebar-logo">
-        <div className="logo-icon">RK</div>
         <h2>Riksdagkollen</h2>
       </div>
 
@@ -44,11 +40,6 @@ export function Sidebar({ activeNav, onSelectNav }: SidebarProps) {
           </button>
         ))}
       </nav>
-
-      <button className="theme-toggle" onClick={toggleTheme} title={`Byt till ${theme === 'light' ? 'mörkt' : 'ljust'} tema`}>
-        <span className="theme-icon">{theme === 'light' ? <MoonIcon /> : <SunIcon />}</span>
-        <span className="theme-label">{theme === 'light' ? 'Mörkt' : 'Ljust'}</span>
-      </button>
 
       <div className="sidebar-footer">
         <p className="version-text">v1.0.0</p>

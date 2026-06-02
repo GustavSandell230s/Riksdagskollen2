@@ -58,8 +58,8 @@ export function DecisionCard({ decision, topicMap, selected, onSelect }: Decisio
           <div className="vote-no" style={{ width: `${100 - yesRatio}%` }} />
         </div>
         <div className="vote-labels">
-          <span>Ja {yesVotes}</span>
-          <span>Nej {noVotes}</span>
+          <span className="vote-count yes">Ja {yesVotes}</span>
+          <span className="vote-count no">Nej {noVotes}</span>
         </div>
       </div>
     </button>

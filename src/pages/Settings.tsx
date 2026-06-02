@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ApiKeyInput } from '../components/ApiKeyInput';
 import { LockIcon, CheckIcon } from '../components/Icons';
+import { useTheme } from '../context/ThemeContext';
 import '../styles/pages.css';
 
 interface SettingsProps {
@@ -10,8 +11,8 @@ interface SettingsProps {
 
 export function Settings({ apiKey, onApiKeyChange }: SettingsProps) {
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
   const [autoSummary, setAutoSummary] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="page-container">
@@ -65,16 +66,16 @@ export function Settings({ apiKey, onApiKeyChange }: SettingsProps) {
 
           <div className="settings-option">
             <div className="setting-header">
-              <label htmlFor="darkMode">Mörkt tema</label>
+              <label htmlFor="themeToggle">Mörkt tema</label>
               <input
-                id="darkMode"
+                id="themeToggle"
                 type="checkbox"
-                checked={darkMode}
-                onChange={(e) => setDarkMode(e.target.checked)}
+                checked={theme === 'dark'}
+                onChange={toggleTheme}
                 className="checkbox-input"
               />
             </div>
-            <p className="setting-description">Använd mörka färger för mindre tröttsam läsning</p>
+            <p className="setting-description">Byt mellan mörkt och ljust tema.</p>
           </div>
 
           <div className="settings-option">

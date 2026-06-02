@@ -39,15 +39,15 @@ export async function generateSummary(text: string, apiKey?: string): Promise<st
         messages: [
           {
             role: 'system',
-            content: 'Du är en expert på svensk politik. Ditt uppdrag är att skapa korta, neutrala och lättförståliga sammanfattningar av riksdagsbeslut och regeringspropositioner. Svaret ska vara på svenska och fokusera på vad beslutet betyder för vanliga människor.',
+            content: 'Du är en expert på svensk politik. Ditt uppdrag är att skapa korta, neutrala och lättförståliga sammanfattningar av riksdagsbeslut och regeringspropositioner. Svaret ska vara på svenska, fokusera på vad beslutet betyder för vanliga människor och ge en tydlig nyans genom att berätta både vad förespråkarna ser som fördelar och vad motståndarna oroar sig för.',
           },
           {
             role: 'user',
-            content: `Skapa en kort sammanfattning (2-3 meningar) av följande riksdagsbeslut eller regeringsproposition:\n\n${text}`,
+            content: `Skapa en kort sammanfattning (2-4 meningar) av följande riksdagsbeslut eller regeringsproposition. Inkludera vad de som motsätter sig tänker och varför de är kritiska.\n\n${text}`,
           },
         ],
         temperature: 0.7,
-        max_tokens: 200,
+        max_tokens: 250,
       }),
     });
 

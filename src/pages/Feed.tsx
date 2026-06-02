@@ -192,9 +192,20 @@ export function Feed({ decisions, onViewDecision }: FeedProps) {
               <ul className="today-decision-list">
                 {todaysDecisions.map((decision) => (
                   <li key={decision.id} className="today-decision-item">
-                    <button type="button" onClick={() => onViewDecision(decision)}>
-                      {decision.title}
-                    </button>
+                    <div className="today-decision-item-main">
+                      <button type="button" onClick={() => onViewDecision(decision)}>
+                        {decision.title}
+                      </button>
+                      {decision.topics.length > 0 && (
+                        <div className="today-decision-tags">
+                          {decision.topics.map((topic) => (
+                            <span key={topic} className="chip" style={{ background: topicMap[topic].color }}>
+                              {topicMap[topic].label}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                     <span className="today-decision-meta">{decision.source}</span>
                   </li>
                 ))}
