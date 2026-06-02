@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn var(--motion-duration) var(--motion-ease);
 }
 
 @keyframes fadeIn {
@@ -46,10 +46,10 @@
 .stat-card {
   background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
   border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 24px;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--motion-duration) var(--motion-ease), box-shadow var(--motion-duration) var(--motion-ease);
 }
 
 .stat-card:hover {
@@ -73,6 +73,12 @@
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* In dark theme, make stat card text fully white for better contrast */
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .stat-card * {
+  color: #ffffff !important;
 }
 
 /* Section Styles */
@@ -107,9 +113,9 @@
 .decision-item {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   padding: 24px;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: box-shadow var(--motion-duration) var(--motion-ease), border-color var(--motion-duration) var(--motion-ease);
 }
 
 .decision-item:hover {
@@ -153,7 +159,7 @@
 .topic-badge {
   display: inline-block;
   padding: 6px 12px;
-  border-radius: 16px;
+  border-radius: var(--radius);
   color: var(--text-primary);
   font-size: 0.8rem;
   font-weight: 600;
@@ -163,7 +169,7 @@
 .topic-badge-small {
   display: inline-block;
   padding: 4px 10px;
-  border-radius: 14px;
+  border-radius: calc(var(--radius) - 2px);
   color: var(--text-primary);
   font-size: 0.75rem;
   font-weight: 600;
@@ -198,10 +204,10 @@
   color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--motion-duration) var(--motion-ease), box-shadow var(--motion-duration) var(--motion-ease);
   font-size: 0.9rem;
 }
 
@@ -224,9 +230,9 @@
   gap: 16px;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 18px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--motion-duration) var(--motion-ease), box-shadow var(--motion-duration) var(--motion-ease);
 }
 
 .topic-card:hover {
@@ -241,7 +247,7 @@
 .topic-color-indicator {
   width: 48px;
   height: 48px;
-  border-radius: 10px;
+  border-radius: var(--radius);
   flex-shrink: 0;
 }
 
@@ -263,7 +269,7 @@
 .feed-controls {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 32px;
 }
@@ -279,9 +285,9 @@
   border: 1px solid var(--border-color);
   background: var(--bg-tertiary);
   color: var(--text-primary);
-  border-radius: 10px;
+  border-radius: var(--radius);
   font-size: 0.95rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color var(--motion-duration) var(--motion-ease), box-shadow var(--motion-duration) var(--motion-ease);
 }
 
 .search-input:focus {
@@ -360,9 +366,9 @@
   border: 1px solid var(--border-color);
   background: var(--bg-tertiary);
   color: var(--text-secondary);
-  border-radius: 8px;
+  border-radius: var(--radius);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color var(--motion-duration) var(--motion-ease), border-color var(--motion-duration) var(--motion-ease), color var(--motion-duration) var(--motion-ease), transform var(--motion-duration) var(--motion-ease);
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -384,10 +390,10 @@
   border: 1px solid var(--border-color);
   background: var(--bg-secondary);
   color: var(--text-primary);
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-size: 0.9rem;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--motion-duration) var(--motion-ease);
 }
 
 .sort-select:focus {
@@ -407,7 +413,13 @@
   border: 1px solid var(--border-color);
   background: var(--bg-tertiary);
   padding: 18px 22px;
-  border-radius: 10px;
+  border-radius: var(--radius);
+}
+
+/* Ensure all text inside today's highlights is readable in dark mode (use light text) */
+[data-theme="dark"] .today-highlights,
+[data-theme="dark"] .today-highlights * {
+  color: var(--text-primary) !important;
 }
 
 .today-highlights-header {
@@ -435,7 +447,7 @@
   gap: 18px;
   background: var(--bg-secondary);
   border-left: 4px solid var(--success-color);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 16px 18px;
   box-shadow: 0 10px 24px rgba(100, 116, 139, 0.08);
 }
@@ -500,12 +512,12 @@
   gap: 8px;
   padding: 8px 12px;
   border: 1px solid transparent;
-  border-radius: 16px;
+  border-radius: var(--radius);
   background: var(--bg-secondary);
   color: var(--text-secondary);
   font-size: 0.88rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color var(--motion-duration) var(--motion-ease), border-color var(--motion-duration) var(--motion-ease), color var(--motion-duration) var(--motion-ease);
 }
 
 .topic-chip-button:hover,
@@ -529,7 +541,7 @@
 .sidebar-section {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 18px;
 }
 
@@ -645,7 +657,7 @@
 .settings-section {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: var(--radius);
   padding: 32px;
 }
 
@@ -664,7 +676,7 @@
 .api-section {
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 20px;
   margin-bottom: 20px;
 }
@@ -674,7 +686,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   margin-top: 16px;
   font-size: 0.9rem;
   font-weight: 600;
@@ -692,7 +704,7 @@
 .info-box {
   background: #fef3c7;
   border-left: 4px solid #f59e0b;
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 16px;
   margin-top: 20px;
 }
@@ -736,8 +748,7 @@
   height: 20px;
   cursor: pointer;
 }
-
-.setting-description {
+ 
   margin: 0;
   color: var(--text-secondary);
   font-size: 0.9rem;
@@ -1208,11 +1219,11 @@
   flex: 1;
   padding: 12px 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform var(--motion-duration) var(--motion-ease), background-color var(--motion-duration) var(--motion-ease), box-shadow var(--motion-duration) var(--motion-ease);
 }
 
 .btn-generate {
@@ -1249,7 +1260,7 @@
 
 .admin-message {
   padding: 16px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   margin-bottom: 16px;
   font-weight: 500;
   display: flex;
@@ -1303,7 +1314,7 @@
 .code-block {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 16px;
   overflow-x: auto;
   color: var(--text-secondary);
